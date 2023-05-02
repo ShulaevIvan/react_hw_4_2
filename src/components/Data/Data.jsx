@@ -5,7 +5,6 @@ const Data = (props) => {
     const setMainAppState = props.setMainAppState;
 
     const deleteRowHandler = (id) => {
-
         setMainAppState(prevState => ({
             ...prevState,
             rows: [...prevState.rows].filter((row) => row.props.id !== id)
@@ -15,10 +14,11 @@ const Data = (props) => {
     const editRowHandler = () => {
         props.rangeInputState.inputRangeRef.current.value = props.range;
         props.dateInputState.inputDateRef.current.value = props.date;
+
         setMainAppState(prevState => ({
             ...prevState,
             editMessageId: props.id,
-        }))
+        }));
     }
 
     return (

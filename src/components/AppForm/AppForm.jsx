@@ -13,22 +13,24 @@ const AppForm = (props) => {
         inputDateResult: undefined,
         inputDateValid: false,
     }
+    
     const initialRangeState = {
         inputRangeRef: useRef(null),
         inputRangeValid: false,
     }
 
     const [dateInputState, setDateInputState] = useState(initialDateState);
-    const [rangeInputState, setRangeInputState] = useState(initialRangeState)
+    const [rangeInputState, setRangeInputState] = useState(initialRangeState);
 
     const inputDateHandler = () => {
         const datePattern = /^\d{2}\.\d{2}\.\d{4}$/;
-        
         if (datePattern.test(dateInputState.inputDateRef.current.value)) {
             const day = dateInputState.inputDateRef.current.value.substr(0,2);
             const month = dateInputState.inputDateRef.current.value.substr(2,3).replace('.', '');
             const year = dateInputState.inputDateRef.current.value.substr(6);
             const validDate = `${year}-${month}-${day}`;
+
+            if (day > 31 || month > 12 || year.split('').length > 4) return;
             
             setDateInputState(prevState => ({
                 ...prevState,
@@ -55,10 +57,11 @@ const AppForm = (props) => {
         setMainAppState(prevState => ({
             ...prevState,
             allInputsValid: false,
-        }))
+        }));
     }
 
     const inputRangeHandler = () => {
+
         if (rangeInputState.inputRangeRef.current.value.trim() !== '' && !isNaN(rangeInputState.inputRangeRef.current.value)) {
             setRangeInputState(prevState => ({
                 ...prevState,
@@ -71,14 +74,13 @@ const AppForm = (props) => {
                 rangeInputState.inputRangeValid ? 
                 prevState.allInputsValid = true : prevState.allInputsValid = false,
             }));
-
-            return;
+            return
         }
 
         setRangeInputState(prevState => ({
             ...prevState,
             inputRangeValid: false,
-            inputDateResult: undefined
+            inputDateResult: undefined,
         }));
 
         setMainAppState(prevState => ({
@@ -88,8 +90,7 @@ const AppForm = (props) => {
     }
 
     const okBtnHandler = () => {
-        console.log(mainAppState.allInputsValid)
-        if (mainAppState.allInputsValid) {
+        if (mainAppState.allInputsValid || (dateInputState.inputDateValid && rangeInputState.inputRangeValid)) {
             const id = Math.random().toString(36).substr(2, 9);
             const date = dateInputState.inputDateRef.current.value;
             const range = rangeInputState.inputRangeRef.current.value;
@@ -107,7 +108,8 @@ const AppForm = (props) => {
             if (mainAppState.editMessageId) {
                 setMainAppState(prevState => ({
                     ...prevState,
-                    editMessageId: undefined,
+                    allInputsValid: false,
+                    editMessageId: null,
                     rows : [...prevState.rows].filter((item) => item.props.id !== mainAppState.editMessageId)
                     .sort((a,b) => new Date(a.props.dateInputState.inputDateResult) - new Date(b.props.dateInputState.inputDateResult)).reverse(),
                 }));
@@ -115,12 +117,14 @@ const AppForm = (props) => {
             
             setMainAppState(prevState => ({
                 ...prevState,
+                allInputsValid: false,
                 rows: [...prevState.rows, row]
                 .sort((a,b) => new Date(a.props.dateInputState.inputDateResult) - new Date(b.props.dateInputState.inputDateResult)).reverse()
             }));
             
             dateInputState.inputDateRef.current.value = ''
             rangeInputState.inputRangeRef.current.value = ''
+            
         }
     }
 
