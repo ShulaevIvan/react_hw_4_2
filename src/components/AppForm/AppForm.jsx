@@ -12,11 +12,13 @@ const AppForm = (props) => {
         inputDateRef: useRef(null),
         inputDateResult: undefined,
         inputDateValid: false,
+        inputClass: 'input-ok',
     }
     
     const initialRangeState = {
         inputRangeRef: useRef(null),
         inputRangeValid: false,
+        inputClass: 'input-ok',
     }
 
     const [dateInputState, setDateInputState] = useState(initialDateState);
@@ -35,7 +37,8 @@ const AppForm = (props) => {
             setDateInputState(prevState => ({
                 ...prevState,
                 inputDateValid: true,
-                inputDateResult: validDate
+                inputDateResult: validDate,
+                inputClass: prevState.inputClass = 'input-ok',
             }));
             
             setMainAppState(prevState => ({
@@ -52,6 +55,7 @@ const AppForm = (props) => {
             ...prevState,
             inputDateValid: false,
             inputDateResult: undefined,
+            inputClass: prevState.inputClass = 'input-err',
         }));
 
         setMainAppState(prevState => ({
@@ -66,6 +70,7 @@ const AppForm = (props) => {
             setRangeInputState(prevState => ({
                 ...prevState,
                 inputRangeValid: true,
+                inputClass: prevState.inputClass = 'input-ok'
             }));
 
             setMainAppState(prevState => ({
@@ -81,6 +86,7 @@ const AppForm = (props) => {
             ...prevState,
             inputRangeValid: false,
             inputDateResult: undefined,
+            inputClass: prevState.inputClass = 'input-err',
         }));
 
         setMainAppState(prevState => ({
@@ -132,11 +138,11 @@ const AppForm = (props) => {
         <React.Fragment>
             <div className="training-form-input-date-wrap">
                 <label htmlFor="date-input">Дата (ДД.ММ.ГГ)</label>
-                <input autoComplete="off" ref={dateInputState.inputDateRef} onInput={inputDateHandler} id="date-input" type="text"></input>
+                <input className={dateInputState.inputClass} autoComplete="off" ref={dateInputState.inputDateRef} onInput={inputDateHandler} id="date-input" type="text"></input>
             </div>
             <div className="training-form-input-range-wrap">
                 <label htmlFor="range-input">Пройдено км</label>
-                <input autoComplete="off" ref={rangeInputState.inputRangeRef} onInput={inputRangeHandler} id="range-input" type="text"></input>
+                <input className={rangeInputState.inputClass} autoComplete="off" ref={rangeInputState.inputRangeRef} onInput={inputRangeHandler} id="range-input" type="text"></input>
             </div>
             <div className="training-form-ok-btn">
                 <label></label>
